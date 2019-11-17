@@ -13,6 +13,8 @@
 		DC95AE4B2381AD76000BF452 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DC95AE4A2381AD76000BF452 /* Assets.xcassets */; };
 		DC95AE4E2381AD76000BF452 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DC95AE4C2381AD76000BF452 /* LaunchScreen.storyboard */; };
 		DC95AE592381B6DC000BF452 /* DetailVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC95AE582381B6DC000BF452 /* DetailVC.swift */; };
+		DC95AE5B2381D0E3000BF452 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC95AE5A2381D0E3000BF452 /* Extensions.swift */; };
+		DC95AE5E2381E7F0000BF452 /* SearchBarHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC95AE5D2381E7F0000BF452 /* SearchBarHeader.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +26,8 @@
 		DC95AE4D2381AD76000BF452 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		DC95AE4F2381AD76000BF452 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		DC95AE582381B6DC000BF452 /* DetailVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailVC.swift; sourceTree = "<group>"; };
+		DC95AE5A2381D0E3000BF452 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Extensions.swift; path = MarvelHeroes/Helpers/Extensions.swift; sourceTree = SOURCE_ROOT; };
+		DC95AE5D2381E7F0000BF452 /* SearchBarHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchBarHeader.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -59,6 +63,7 @@
 				DC95AE552381B0BC000BF452 /* Model */,
 				DC95AE562381B0CC000BF452 /* View */,
 				DC95AE572381B0D2000BF452 /* Controller */,
+				DC95AE5C2381D114000BF452 /* Helpers */,
 				DC95AE412381AD74000BF452 /* AppDelegate.swift */,
 				DC95AE432381AD74000BF452 /* SceneDelegate.swift */,
 				DC95AE4A2381AD76000BF452 /* Assets.xcassets */,
@@ -78,6 +83,7 @@
 		DC95AE562381B0CC000BF452 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				DC95AE5D2381E7F0000BF452 /* SearchBarHeader.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -89,6 +95,14 @@
 				DC95AE582381B6DC000BF452 /* DetailVC.swift */,
 			);
 			path = Controller;
+			sourceTree = "<group>";
+		};
+		DC95AE5C2381D114000BF452 /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				DC95AE5A2381D0E3000BF452 /* Extensions.swift */,
+			);
+			path = Helpers;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -161,9 +175,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DC95AE5B2381D0E3000BF452 /* Extensions.swift in Sources */,
 				DC95AE462381AD74000BF452 /* ViewController.swift in Sources */,
 				DC95AE592381B6DC000BF452 /* DetailVC.swift in Sources */,
 				DC95AE422381AD74000BF452 /* AppDelegate.swift in Sources */,
+				DC95AE5E2381E7F0000BF452 /* SearchBarHeader.swift in Sources */,
 				DC95AE442381AD74000BF452 /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

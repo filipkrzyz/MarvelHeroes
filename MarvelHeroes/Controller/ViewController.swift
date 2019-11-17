@@ -8,15 +8,41 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+class ViewController: UICollectionViewController {
 
+   
+    private let headerIdentifier = "headerCellId"
+
+    let searchBar: UISearchBar = {
+        let s = UISearchBar()
+        //s.delegate = self
+        s.placeholder = "Search character..."
+        s.sizeToFit()
+        s.isTranslucent = true
+        s.barTintColor = .darkBlack
+        s.backgroundColor = .darkBlack
+        s.translatesAutoresizingMaskIntoConstraints = false
+        
+        return s
+    }()
+    
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        navigationController?.navigationBar.barTintColor = UIColor(red: 21/255, green: 21/255, blue: 21/255, alpha: 1)
+       
+        navigationController?.navigationBar.barTintColor = .darkBlack
         navigationController?.navigationBar.isTranslucent = false
+        navigationController?.navigationBar.barStyle = .black
         
         addNavBarImage()
+        
+        collectionView.backgroundColor = .white
+        
+        collectionView!.register(UICollectionViewCell.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: headerIdentifier)
+        
+        
+        
     }
 
     
@@ -40,5 +66,46 @@ class ViewController: UIViewController {
         
     }
 
+}
+
+extension ViewController {
+    
+    override func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+        
+        let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: headerIdentifier, for: indexPath)
+        
+        header.addSubview(searchBar)
+        
+        searchBar.addConstraintWithFormat(format: "H:|[v0]|", views: searchBar)
+        searchBar.addConstraintWithFormat(format: "V:|[v0]|", views: searchBar)
+        
+        if let textfield = searchBar.value(forKey: "searchField") as? UITextField {
+            textfield.backgroundColor = UIColor.lightGray
+            textfield.textColor = UIColor.white
+            textfield.attributedPlaceholder = NSAttributedString(string: textfield.placeholder ?? "", attributes: [NSAttributedString.Key.foregroundColor : UIColor.gray])
+            if let leftView = textfield.leftView as? UIImageView {
+                leftView.image = leftView.image?.withRenderingMode(.alwaysTemplate)
+                leftView.tintColor = UIColor.white
+            }
+        }
+        
+        return header
+    }
+    
+}
+
+extension ViewController: UICollectionViewDelegateFlowLayout {
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
+        return CGSize(width: view.frame.width, height: 50)
+    }
+}
+
+extension UIColor {
+    static func rgb(red: CGFloat, green: CGFloat, blue: CGFloat) -> UIColor {
+        return UIColor(red: red/255, green: green/255, blue: blue/255, alpha: 1)
+    }
+    
+    static let darkBlack = UIColor(red: 21/255, green: 21/255, blue: 21/255, alpha: 1)
 }
 
