@@ -19,4 +19,16 @@ extension UIView {
         }
         NSLayoutConstraint.activate(NSLayoutConstraint.constraints(withVisualFormat: format, options: NSLayoutConstraint.FormatOptions(), metrics: nil, views: viewsDictionary))
     }
+    
+    func addSpinner(spinner: UIActivityIndicatorView) {
+        addSubview(spinner)
+        spinner.translatesAutoresizingMaskIntoConstraints = false
+        spinner.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
+        spinner.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
+        spinner.startAnimating()
+    }
+    
+    func removeSpinner(spinner: UIActivityIndicatorView) {
+        spinner.removeFromSuperview()
+    }
 }
