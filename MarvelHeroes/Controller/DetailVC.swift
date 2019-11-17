@@ -1,5 +1,5 @@
 //
-//  ViewController.swift
+//  DetailVC.swift
 //  MarvelHeroes
 //
 //  Created by Filip Krzyzanowski on 17/11/2019.
@@ -8,13 +8,14 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+class DetailVC: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view.
+
+        
     }
+    
 
-
+    
 }
-
