@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Combine
 
 class ViewController: UICollectionViewController, UISearchBarDelegate {
 
@@ -66,6 +67,20 @@ class ViewController: UICollectionViewController, UISearchBarDelegate {
         spinner.color = .white
         fetchCharacters(keywords: "")
         addNoResultLabel()
+        setupSearchBarListeners()
+    }
+    
+    private func setupSearchBarListeners() {
+        let publisher = NotificationCenter.default.publisher(for: UISearchTextField.textDidChangeNotification, object: searchBar.searchTextField)
+        publisher
+            .map {
+                ($0.object as! UISearchTextField).text
+        }
+        .debounce(for: .milliseconds(400), scheduler: RunLoop.main)
+        .removeDuplicates()
+        .sink(receiveValue: { (str) in
+            self.fetchCharacters(keywords: str ?? "")
+        })
     }
 
     
