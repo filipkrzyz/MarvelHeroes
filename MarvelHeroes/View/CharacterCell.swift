@@ -47,6 +47,8 @@ class CharacterCell: UICollectionViewCell {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.textColor = .white
+        label.numberOfLines = 0
+        label.textAlignment = .center
         label.text = ""
         return label
     }()
@@ -60,7 +62,7 @@ class CharacterCell: UICollectionViewCell {
         
         addConstraintWithFormat(format: "H:|-8-[v0]-8-|", views: nameLabel)
         
-        addConstraintWithFormat(format: "V:|[v0]-8-[v1(44)]|", views: thumbnailImageView, nameLabel)
+        addConstraintWithFormat(format: "V:|[v0][v1(44)]|", views: thumbnailImageView, nameLabel)
        
     }
     

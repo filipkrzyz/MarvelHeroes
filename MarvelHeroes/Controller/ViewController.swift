@@ -27,6 +27,8 @@ class ViewController: UICollectionViewController, UISearchBarDelegate {
     
     var listOfCharacters = [Character] ()
     
+    var selectedCharacter: (character: Character, thumbnail: UIImage)?
+    
     let spinner = UIActivityIndicatorView(style: UIActivityIndicatorView.Style.large)
     
     override func viewDidLoad() {
@@ -135,7 +137,7 @@ extension ViewController {
         
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "CharacterCell", for: indexPath) as! CharacterCell
         
-        cell.backgroundColor = UIColor(red: 21/255, green: 21/255, blue: 21/255, alpha: 1)
+        cell.backgroundColor = .black //.darkBlack
         
         cell.character = self.listOfCharacters[indexPath.row]
         
@@ -155,6 +157,19 @@ extension ViewController {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
         
         return 10
+    }
+    
+    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let cell = collectionView.cellForItem(at: indexPath) as! CharacterCell
+        let characterThumbnail = cell.thumbnailImageView.image
+        selectedCharacter = (character: cell.character!, thumbnail: characterThumbnail!)
+        
+        
+        let detailVC = DetailVC()
+        detailVC.character = selectedCharacter?.character
+        detailVC.thumbnailImage = (selectedCharacter?.thumbnail)!
+        navigationController?.pushViewController(detailVC, animated: true)
+        
     }
     
 }
