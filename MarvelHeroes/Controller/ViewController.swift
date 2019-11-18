@@ -25,6 +25,15 @@ class ViewController: UICollectionViewController, UISearchBarDelegate {
         return s
     }()
     
+    let noResultsLabel: UILabel = {
+        let label = UILabel()
+        label.numberOfLines = 0
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.textColor = .white
+        label.attributedText = NSAttributedString(string: "Sorry, no characters were found. \n Try different search", attributes: [NSAttributedString.Key.font : UIFont.systemFont(ofSize: 23, weight: .light)])
+        return label
+    }()
+    
     var listOfCharacters = [Character] ()
     
     var selectedCharacter: (character: Character, thumbnail: UIImage)?
@@ -56,6 +65,7 @@ class ViewController: UICollectionViewController, UISearchBarDelegate {
         
         spinner.color = .white
         fetchCharacters(keywords: "")
+        addNoResultLabel()
     }
 
     
@@ -76,7 +86,15 @@ class ViewController: UICollectionViewController, UISearchBarDelegate {
         imageView.contentMode = .scaleAspectFit
         
         navigationItem.titleView = imageView
-        
+    }
+    
+    func addNoResultLabel() {
+        view.addSubview(noResultsLabel)
+        noResultsLabel.isHidden = true
+        noResultsLabel.addConstraintWithFormat(format: "H:|-16-[v0]-16-|", views: noResultsLabel)
+        noResultsLabel.heightAnchor.constraint(equalToConstant: 60).isActive = true
+        noResultsLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        noResultsLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
     }
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
@@ -94,10 +112,12 @@ class ViewController: UICollectionViewController, UISearchBarDelegate {
             case .success(let results):
                 self.listOfCharacters = results
                 DispatchQueue.main.async {
+                    if self.listOfCharacters.count == 0 {
+                        self.noResultsLabel.isHidden = false
+                    } else { self.noResultsLabel.isHidden = true }
                     self.collectionView?.reloadData()
                     self.view.removeSpinner(spinner: self.spinner)
                 }
-                //print("data.result = \(results[0].name)")
             }
         }
     }
