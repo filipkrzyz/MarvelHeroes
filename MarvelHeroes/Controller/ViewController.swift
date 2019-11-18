@@ -53,12 +53,6 @@ class ViewController: UICollectionViewController, UISearchBarDelegate {
         
         collectionView.backgroundColor = .darkBlack
         
-        // register header
-        collectionView!.register(UICollectionViewCell.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: headerIdentifier)
-        // pin search bar to the top
-        if let layout = collectionView.collectionViewLayout as? UICollectionViewFlowLayout {
-            layout.sectionHeadersPinToVisibleBounds = true
-        }
         searchBar.delegate = self
         
         // register cell
@@ -68,6 +62,9 @@ class ViewController: UICollectionViewController, UISearchBarDelegate {
         fetchCharacters(keywords: "")
         addNoResultLabel()
         setupSearchBarListeners()
+        addSearchBar()
+        collectionView.isUserInteractionEnabled = true
+    
     }
     
     private func setupSearchBarListeners() {
@@ -115,6 +112,11 @@ class ViewController: UICollectionViewController, UISearchBarDelegate {
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         guard let searchBarText = searchBar.text else { return }
         fetchCharacters(keywords: searchBarText)
+        searchBar.resignFirstResponder()
+    }
+    
+    override func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+        searchBar.resignFirstResponder()
     }
     
     func fetchCharacters(keywords: String) {
@@ -141,15 +143,12 @@ class ViewController: UICollectionViewController, UISearchBarDelegate {
 
 extension ViewController {
     
-    // adding search bar header to the collection view
-    override func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-        
-        let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: headerIdentifier, for: indexPath)
-        
-        header.addSubview(searchBar)
+    
+    func addSearchBar() {
+        view.addSubview(searchBar)
         
         searchBar.addConstraintWithFormat(format: "H:|[v0]|", views: searchBar)
-        searchBar.addConstraintWithFormat(format: "V:|[v0]|", views: searchBar)
+        searchBar.addConstraintWithFormat(format: "V:|[v0(50)]", views: searchBar)
         
         // setting colors of the search bar
         if let textfield = searchBar.value(forKey: "searchField") as? UITextField {
@@ -161,9 +160,8 @@ extension ViewController {
                 leftView.tintColor = UIColor.white
             }
         }
-        return header
     }
-    
+
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return self.listOfCharacters.count
     }
@@ -204,7 +202,7 @@ extension ViewController {
         detailVC.character = selectedCharacter?.character
         detailVC.thumbnailImage = (selectedCharacter?.thumbnail)!
         navigationController?.pushViewController(detailVC, animated: true)
-        
+        searchBar.resignFirstResponder()
     }
     
 }
