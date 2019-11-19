@@ -20,9 +20,11 @@ The app communicates with the Public Marvel API lists the Marvel Characters in a
   - Data is decoded from json to the local character data model
 * Extensions is created to hold UIView extension for setting up UI constraints with visual format
 
-#Images
+# Images
+
 ![Screenshot1][1]
-![Screenshot][2]
+
+![Screenshot2][2]
 
 
 
