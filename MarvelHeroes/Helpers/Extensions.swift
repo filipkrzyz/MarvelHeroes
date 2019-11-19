@@ -22,6 +22,7 @@ extension UIView {
     
     func addSpinner(spinner: UIActivityIndicatorView) {
         addSubview(spinner)
+        spinner.color = .white
         spinner.translatesAutoresizingMaskIntoConstraints = false
         spinner.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
         spinner.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true

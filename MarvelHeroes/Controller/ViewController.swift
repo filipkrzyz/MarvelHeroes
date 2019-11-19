@@ -9,11 +9,9 @@
 import UIKit
 import Combine
 
-class ViewController: UICollectionViewController, UISearchBarDelegate {
+class ViewController: UICollectionViewController {
 
-   
-    private let headerIdentifier = "headerCellId"
-
+    // MARK: Properties
     let searchBar: UISearchBar = {
         let s = UISearchBar()
         s.placeholder = "Search character..."
@@ -41,48 +39,37 @@ class ViewController: UICollectionViewController, UISearchBarDelegate {
     
     let spinner = UIActivityIndicatorView(style: UIActivityIndicatorView.Style.large)
     
+    let cellId = "CharacterCell"
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // setup navigation bar
+        setupNavigationBar()
+        
+        addSearchBar()
+        setupSearchBarListeners()
+        searchBar.delegate = self
+        
+        collectionView.backgroundColor = .darkBlack
+        
+        // register cell
+        collectionView!.register(CharacterCell.self, forCellWithReuseIdentifier: cellId)
+        
+        fetchCharacters(keywords: "")
+        addNoResultLabel()
+        
+    }
+    
+    
+    func setupNavigationBar() {
         navigationController?.navigationBar.barTintColor = .darkBlack
         navigationController?.navigationBar.isTranslucent = false
         navigationController?.navigationBar.barStyle = .black
         
         addNavBarImage()
-        
-        collectionView.backgroundColor = .darkBlack
-        
-        searchBar.delegate = self
-        
-        // register cell
-        collectionView!.register(CharacterCell.self, forCellWithReuseIdentifier: "CharacterCell")
-        
-        spinner.color = .white
-        fetchCharacters(keywords: "")
-        addNoResultLabel()
-        setupSearchBarListeners()
-        addSearchBar()
-        collectionView.isUserInteractionEnabled = true
-    
     }
-    
-    private func setupSearchBarListeners() {
-        let publisher = NotificationCenter.default.publisher(for: UISearchTextField.textDidChangeNotification, object: searchBar.searchTextField)
-        publisher
-            .map {
-                ($0.object as! UISearchTextField).text
-        }
-        .debounce(for: .milliseconds(400), scheduler: RunLoop.main)
-        .removeDuplicates()
-        .sink(receiveValue: { (str) in
-            self.fetchCharacters(keywords: str ?? "")
-        })
-    }
-
     
     func addNavBarImage() {
-        
         let navController = navigationController!
         
         let image = UIImage(named: "marvel_logo.png")
@@ -109,41 +96,6 @@ class ViewController: UICollectionViewController, UISearchBarDelegate {
         noResultsLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
     }
     
-    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        guard let searchBarText = searchBar.text else { return }
-        fetchCharacters(keywords: searchBarText)
-        searchBar.resignFirstResponder()
-    }
-    
-    override func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
-        searchBar.resignFirstResponder()
-    }
-    
-    func fetchCharacters(keywords: String) {
-        view.addSpinner(spinner: spinner)
-        let apiRequest = APIRequest(keywords: keywords)
-        apiRequest.getCharacters() { result in
-            switch result {
-            case .failure(let error):
-                print(error)
-            case .success(let results):
-                self.listOfCharacters = results
-                DispatchQueue.main.async {
-                    if self.listOfCharacters.count == 0 {
-                        self.noResultsLabel.isHidden = false
-                    } else { self.noResultsLabel.isHidden = true }
-                    self.collectionView?.reloadData()
-                    self.view.removeSpinner(spinner: self.spinner)
-                }
-            }
-        }
-    }
-
-}
-
-extension ViewController {
-    
-    
     func addSearchBar() {
         view.addSubview(searchBar)
         
@@ -161,14 +113,68 @@ extension ViewController {
             }
         }
     }
+    
+    private func setupSearchBarListeners() {
+         let publisher = NotificationCenter.default.publisher(for: UISearchTextField.textDidChangeNotification, object: searchBar.searchTextField)
+         publisher
+             .map {
+                 ($0.object as! UISearchTextField).text
+         }
+         .debounce(for: .milliseconds(500), scheduler: RunLoop.main)
+         .removeDuplicates()
+         .sink(receiveValue: { (str) in
+             self.fetchCharacters(keywords: str ?? "")
+         })
+     }
+    
+    
+    func fetchCharacters(keywords: String) {
+        view.addSpinner(spinner: spinner)
+        
+        let apiRequest = APIRequest(keywords: keywords)
+        
+        apiRequest.getCharacters() { result in
+            switch result {
+            case .failure(let error):
+                print(error)
+            case .success(let results):
+                self.listOfCharacters = results
+                
+                DispatchQueue.main.async {
+                    if self.listOfCharacters.count == 0 {
+                        self.noResultsLabel.isHidden = false
+                    } else { self.noResultsLabel.isHidden = true }
+                    
+                    self.collectionView?.reloadData()
+                    self.view.removeSpinner(spinner: self.spinner)
+                }
+            }
+        }
+    }
 
+}
+
+
+
+extension ViewController: UISearchBarDelegate, UICollectionViewDelegateFlowLayout {
+    
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        guard let searchBarText = searchBar.text else { return }
+        fetchCharacters(keywords: searchBarText)
+        searchBar.resignFirstResponder()
+    }
+    
+    override func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+        searchBar.resignFirstResponder()
+    }
+    
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return self.listOfCharacters.count
     }
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "CharacterCell", for: indexPath) as! CharacterCell
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as! CharacterCell
         
         cell.backgroundColor = .black //.darkBlack
         
@@ -184,7 +190,7 @@ extension ViewController {
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
 
-        return UIEdgeInsets(top: 16, left: 16, bottom: 16, right: 16)
+        return UIEdgeInsets(top: 50, left: 16, bottom: 16, right: 16)
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
@@ -193,25 +199,20 @@ extension ViewController {
     }
     
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        
         let cell = collectionView.cellForItem(at: indexPath) as! CharacterCell
         let characterThumbnail = cell.thumbnailImageView.image
         selectedCharacter = (character: cell.character!, thumbnail: characterThumbnail!)
-        
-        
+      
         let detailVC = DetailVC()
         detailVC.character = selectedCharacter?.character
         detailVC.thumbnailImage = (selectedCharacter?.thumbnail)!
+        
         navigationController?.pushViewController(detailVC, animated: true)
+        
         searchBar.resignFirstResponder()
     }
     
-}
-
-extension ViewController: UICollectionViewDelegateFlowLayout {
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
-        return CGSize(width: view.frame.width, height: 50)
-    }
 }
 
 extension UIColor {

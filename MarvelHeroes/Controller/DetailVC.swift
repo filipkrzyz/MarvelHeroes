@@ -13,7 +13,6 @@ class DetailVC: UIViewController {
     var thumbnailImage: UIImage?
     var character: Character?
     
-    
     let imageView: UIImageView = {
         let imgView = UIImageView()
         imgView.contentMode = .scaleAspectFill
@@ -43,6 +42,8 @@ class DetailVC: UIViewController {
         
         view.backgroundColor = .darkBlack
         
+        navigationController?.navigationBar.tintColor = .red
+        
         view.addSubview(imageView)
         view.addSubview(nameLabel)
         view.addSubview(descriptionLabel)
@@ -53,8 +54,6 @@ class DetailVC: UIViewController {
         view.addConstraintWithFormat(format: "H:|-16-[v0]-16-|", views: nameLabel)
         view.addConstraintWithFormat(format: "H:|-16-[v0]-16-|", views: descriptionLabel)
         view.addConstraintWithFormat(format: "V:|[v0(\(height))]-16-[v1]-16-[v2]", views: imageView, nameLabel,descriptionLabel)
-        
-        
         
         nameLabel.attributedText = NSAttributedString(string: character?.name ?? "", attributes: [NSAttributedString.Key.font : UIFont.systemFont(ofSize: 35, weight: .semibold)])
         
