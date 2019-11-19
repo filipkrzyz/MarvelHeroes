@@ -35,6 +35,10 @@ class ViewController: UICollectionViewController {
     
     var listOfCharacters = [Character] ()
     
+    var totalCharacters = 0 // total number of resources available given the current filter set
+    
+    var offset = 0 // requested offset (number of skipped results) of the call
+    
     var selectedCharacter: (character: Character, thumbnail: UIImage)?
     
     let spinner = UIActivityIndicatorView(style: UIActivityIndicatorView.Style.large)
@@ -55,7 +59,7 @@ class ViewController: UICollectionViewController {
         // register cell
         collectionView!.register(CharacterCell.self, forCellWithReuseIdentifier: cellId)
         
-        fetchCharacters(keywords: "")
+        fetchCharacters(keywords: "", offset: offset)
         addNoResultLabel()
         
     }
@@ -122,24 +126,30 @@ class ViewController: UICollectionViewController {
          }
          .debounce(for: .milliseconds(500), scheduler: RunLoop.main)
          .removeDuplicates()
-         .sink(receiveValue: { (str) in
-             self.fetchCharacters(keywords: str ?? "")
+         .sink(receiveValue: { (searchBarText) in
+            self.offset = 0
+            self.fetchCharacters(keywords: searchBarText ?? "", offset: self.offset)
          })
      }
     
     
-    func fetchCharacters(keywords: String) {
+    func fetchCharacters(keywords: String, offset: Int) {
         view.addSpinner(spinner: spinner)
         
-        let apiRequest = APIRequest(keywords: keywords)
+        let apiRequest = APIRequest(keywords: keywords, offset: offset)
         
         apiRequest.getCharacters() { result in
             switch result {
             case .failure(let error):
                 print(error)
-            case .success(let results):
-                self.listOfCharacters = results
+            case .success(let results, let total):
+                if offset == 0 {
+                    self.listOfCharacters = results
+                } else {
+                    self.listOfCharacters.append(contentsOf: results)
+                }
                 
+                self.totalCharacters = total
                 DispatchQueue.main.async {
                     if self.listOfCharacters.count == 0 {
                         self.noResultsLabel.isHidden = false
@@ -160,7 +170,8 @@ extension ViewController: UISearchBarDelegate, UICollectionViewDelegateFlowLayou
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         guard let searchBarText = searchBar.text else { return }
-        fetchCharacters(keywords: searchBarText)
+        offset = 0
+        fetchCharacters(keywords: searchBarText, offset: offset)
         searchBar.resignFirstResponder()
     }
     
@@ -179,6 +190,13 @@ extension ViewController: UISearchBarDelegate, UICollectionViewDelegateFlowLayou
         cell.backgroundColor = .black //.darkBlack
         
         cell.character = self.listOfCharacters[indexPath.row]
+        
+        if indexPath.row == self.listOfCharacters.count - 1 {
+            if totalCharacters > self.listOfCharacters.count {
+                offset = offset + 100
+                fetchCharacters(keywords: self.searchBar.text ?? "", offset: offset)
+            }
+        }
         
         return cell
     }

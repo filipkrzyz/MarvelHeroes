@@ -70,7 +70,6 @@
 				DC95AE562381B0CC000BF452 /* View */,
 				DC95AE572381B0D2000BF452 /* Controller */,
 				DC95AE5C2381D114000BF452 /* Helpers */,
-				DC95AE632381F0D7000BF452 /* APIRequest.swift */,
 				DC95AE412381AD74000BF452 /* AppDelegate.swift */,
 				DC95AE432381AD74000BF452 /* SceneDelegate.swift */,
 				DC95AE4A2381AD76000BF452 /* Assets.xcassets */,
@@ -110,6 +109,7 @@
 			isa = PBXGroup;
 			children = (
 				DC95AE5A2381D0E3000BF452 /* Extensions.swift */,
+				DC95AE632381F0D7000BF452 /* APIRequest.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";

@@ -13,6 +13,7 @@ struct Response: Decodable {
 }
 
 struct CharacterData: Decodable {
+    var total: Int
     var results: [Character]
 }
 

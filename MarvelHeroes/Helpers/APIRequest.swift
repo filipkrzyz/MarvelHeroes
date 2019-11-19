@@ -22,7 +22,7 @@ struct APIRequest {
     static let private_key = "40c0a26ccce4824058d6cd03a2f3f23483ef0454"
     let resourceURL: URL
     
-    init(keywords: String) {
+    init(keywords: String, offset: Int) {
         let ts = NSDate().timeIntervalSince1970
         let hash = MD5(string: "\(ts)\(APIRequest.private_key)\(APIRequest.public_key)")
         
@@ -33,7 +33,7 @@ struct APIRequest {
             filter = ""
         }
         
-        let resourceString = "https://gateway.marvel.com/v1/public/characters?limit=100&orderBy=-modified&\(filter)ts=\(ts)&apikey=\(APIRequest.public_key)&hash=\(hash)"
+        let resourceString = "https://gateway.marvel.com/v1/public/characters?limit=100&orderBy=-modified&\(filter)&offset=\(offset)&ts=\(ts)&apikey=\(APIRequest.public_key)&hash=\(hash)"
         
         let urlResourceString = resourceString.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
         
@@ -46,7 +46,7 @@ struct APIRequest {
     }
     
     
-    func getCharacters(completionHandler: @escaping(Result<[Character], SearchError>) -> Void) {
+    func getCharacters(completionHandler: @escaping(Result<([Character], Int), SearchError>) -> Void) {
         
         let dataTask = URLSession.shared.dataTask(with: resourceURL) { (data, _, _) in
             
@@ -59,7 +59,7 @@ struct APIRequest {
                 let decoder = JSONDecoder()
                 
                 let response = try decoder.decode(Response.self, from: jsonData)
-                completionHandler(.success(response.data.results))
+                completionHandler(.success((response.data.results, response.data.total)))
                 
             } catch {
                 completionHandler(.failure(.canNotProcessData))
