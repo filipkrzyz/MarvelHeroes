@@ -23,3 +23,11 @@ The app communicates with the Public Marvel API lists the Marvel Characters in a
 #Images
 ![Screenshot1][1]
 ![Screenshot][2]
+
+
+
+
+
+
+[1]: ./Screenshot1.png
+[2]: ./Screenshot.png
