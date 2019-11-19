@@ -21,5 +21,5 @@ The app communicates with the Public Marvel API lists the Marvel Characters in a
 * Extensions is created to hold UIView extension for setting up UI constraints with visual format
 
 #Images
-[Screenshot1][1]
-[Screenshot][2]
+![Screenshot1][1]
+![Screenshot][2]
