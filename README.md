@@ -1,5 +1,5 @@
 # Marvel Heroes
-The app is a solution for the tech test for iOS developer position at Wallapop. 
+The app was created for the tech test for iOS developer position at Wallapop. 
 The app communicates with the Public Marvel API lists the Marvel Characters in a collection view,  lets the user search the contents of this list and see the full details of any item from the collection.
 
 # How the app is working
