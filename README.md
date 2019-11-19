@@ -22,7 +22,7 @@ The app communicates with the Public Marvel API lists the Marvel Characters in a
 
 # Images
 
-![Screenshot1][1] ![Screenshot2][2]
+![Screenshot1][1]     ![Screenshot2][2]
 
 
 
