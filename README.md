@@ -30,4 +30,4 @@ The app communicates with the Public Marvel API lists the Marvel Characters in a
 
 
 [1]: ./Screenshot1.png
-[2]: ./Screenshot .png
+[2]: ./Screenshot2.png
